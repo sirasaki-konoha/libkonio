@@ -68,6 +68,8 @@ ltmain.sh
 ar-lib
 config.guess
 config.sub
+libtool
+configure~
 
 # build
 Makefile

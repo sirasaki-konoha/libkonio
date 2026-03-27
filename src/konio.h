@@ -47,6 +47,8 @@ typedef struct {
 
 /* Utility */
 KResult k_result_from_errno(int err);
+const char* k_result_str(KResult result);
+void k_result_print(KResult r);
 
 /* Writer */
 KResult k_writer_new(Writer* wt, const char* path, WriteType type);
@@ -59,7 +61,7 @@ KResult k_writer_free(Writer* wt);
 KResult k_reader_new(Reader* reader, const char* path);
 KResult k_reader_read_all(Reader* r, char** out);
 KResult k_reader_getline(Reader* r, long unsigned int line, char* out);
-KResult k_reader_free(Reader* r);
+void k_reader_free(Reader* r);
 long unsigned int k_reader_get_total_line(Reader* r);
 
 /* Directory */

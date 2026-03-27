@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libkonio.la
 libkonio_la_SOURCES = \
     konio.h \
     writer/writer.c \
-    reader/readr.c \
+    reader/reader.c \
 		directory/directory.c \
 		other.c
 

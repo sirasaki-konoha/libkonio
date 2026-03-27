@@ -1,5 +1,4 @@
 #include "../konio.h"
-#include "../kutil.h"
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
@@ -53,7 +52,9 @@ KResult k_reader_read_all(Reader *r, char** out) {
 
 
 
-
+void k_reader_free(Reader *r) {
+	fclose(r->file);
+}
 
 
 
