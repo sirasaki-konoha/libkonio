@@ -53,3 +53,30 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Autoconf / Automake
+autom4te.cache/
+aclocal.m4
+configure
+config.h.in
+Makefile.in
+compile
+missing
+install-sh
+depcomp
+ltmain.sh
+
+# build
+Makefile
+config.status
+config.log
+
+# libtool
+*.lo
+*.la
+.libs/
+
+# object files
+*.o
+
+*.swp
