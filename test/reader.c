@@ -21,11 +21,22 @@ int main() {
 		return -1;
 	}
 
+	printf("test.sh content: \n%s\n", content);
 
+	unsigned long total_len = k_reader_get_total_line(&reader);
+	char* line_13 = malloc(255);
+
+	result = k_reader_getline(&reader, 13, line_13, sizeof(line_13));
+	if (K_FAILED(result)) {
+		k_reader_free(&reader);
+		k_result_print(result);
+		return -1;
+	}
+	
+	printf("test.sh:13: %s\n", line_13);
+
+	free(line_13);
 	k_reader_free(&reader);
-
-	printf("Makefile content: \n%s\n", content);
-
 	free(content);
 }
 

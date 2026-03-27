@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-CFLAGS="-std=c99 -O2"
+CFLAGS="-std=c99 -O0 -g -fsanitize=undefined,address"
 CC=gcc
 
 build_test() {
@@ -14,6 +14,7 @@ build_test() {
 
         $CC $CFLAGS "$file" \
             src/other.c \
+						src/kutil.c \
             src/directory/directory.c \
             src/reader/reader.c \
             src/writer/writer.c \

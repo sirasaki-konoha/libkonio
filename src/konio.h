@@ -39,7 +39,8 @@ typedef struct {
 
 typedef struct {
 	FILE* file;
-	const char* path;
+	char* path;
+	unsigned long* positions;
 } Reader;
 
 typedef struct {
@@ -63,7 +64,7 @@ KResult k_writer_free(Writer* wt);
 /* Reader */
 KResult k_reader_new(Reader* reader, const char* path);
 KResult k_reader_read_all(Reader* r, char** out);
-KResult k_reader_getline(Reader* r, long unsigned int line, char* out);
+KResult k_reader_getline(Reader* r, long unsigned int line, char* out, size_t size);
 void k_reader_free(Reader* r);
 long unsigned int k_reader_get_total_line(Reader* r);
 
