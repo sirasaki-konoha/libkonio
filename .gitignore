@@ -65,6 +65,7 @@ missing
 install-sh
 depcomp
 ltmain.sh
+ar-lib
 
 # build
 Makefile
@@ -80,3 +81,4 @@ config.log
 *.o
 
 *.swp
+

@@ -1,11 +1,11 @@
 lib_LTLIBRARIES = libkonio.la
 
 libkonio_la_SOURCES = \
-    konio.c \
     konio.h \
-    main.c \
-    write/write.c \
-    read/read.c
+    writer/writer.c \
+    reader/readr.c \
+		directory/directory.c \
+		other.c
 
 libkonio_la_LDFLAGS = -version-info 0:0:0
 
