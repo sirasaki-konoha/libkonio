@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <dirent.h>
 
+#define K_FAILED(r) ((r).code != K_OK)
+#define K_SUCCEEDED(r) ((r).code == K_OK)
+
 typedef enum {
 	APPEND,
 	NEW,
