@@ -66,6 +66,8 @@ install-sh
 depcomp
 ltmain.sh
 ar-lib
+config.guess
+config.sub
 
 # build
 Makefile
