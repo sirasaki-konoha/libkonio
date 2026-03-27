@@ -30,9 +30,9 @@ KResult k_result_from_errno(int err)
             res.code = K_ERR_NO_SPACE;
             break;
 
-				case ENOMEM:
-						res.code = K_ERR_NO_MEMORY;
-						break;
+		case ENOMEM:
+			res.code = K_ERR_NO_MEMORY;
+			break;
 
         case EINVAL:
             res.code = K_ERR_INVALID_ARG;
