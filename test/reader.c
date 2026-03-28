@@ -23,10 +23,10 @@ int main() {
 
 	printf("test.sh content: \n%s\n", content);
 
-	unsigned long total_len = k_reader_get_total_line(&reader);
+	unsigned long total_len = k_reader_get_total_line(reader);
 	char* line_13 = malloc(255);
 
-	result = k_reader_getline(&reader, 13, line_13, sizeof(line_13));
+	result = k_reader_getline(&reader, total_len - 1, line_13, sizeof(char) * 255);
 	if (K_FAILED(result)) {
 		k_reader_free(&reader);
 		k_result_print(result);

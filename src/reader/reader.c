@@ -12,24 +12,35 @@ KResult k_reader_new(Reader *reader, const char *path) {
 	char buf[256];
 	unsigned long line = 0;
 
+
 	if (fp == NULL) {
 		return k_result_from_errno(errno);
 	}
 
 	size_t capacity = 1024;
-	reader->positions = malloc(sizeof(unsigned long) * capacity);
+	reader->positions = malloc(sizeof(fpos_t) * capacity);
 
-	while (fgets(buf, sizeof(buf), fp)) {
-			if (line >= capacity) {
-					capacity *= 2;
-					reader->positions = realloc(reader->positions,
-							sizeof(unsigned long) * capacity);
-			}
-			reader->positions[line++] = ftell(fp);
+	while (1) {
+		if (line >= capacity) {
+			capacity *= 2;
+			reader->positions = realloc(
+					reader->positions, 
+					sizeof(fpos_t) * capacity
+			);
+		}
+
+		if (fgetpos(fp, &reader->positions[line]) != 0)
+			break;
+
+		if (!fgets(buf, sizeof(buf), fp))
+			break;
+
+		line++;
 	}
 
 	reader->path = safe_strdup(path);
 	reader->file = fp;
+	reader->line_count = line;
 
 	result.code = K_OK;
 	result.sys_errno = errno;
@@ -67,30 +78,26 @@ KResult k_reader_read_all(Reader *r, char** out) {
 }
 
 KResult k_reader_getline(Reader *r, unsigned long line, char *out, size_t size) {
-	KResult result;
-	result.code = K_OK;
-
-	if (fseek(r->file, r->positions[line], SEEK_SET) != 0) {
-		result = k_result_from_errno(errno);
-		return result;
+	if (!r || !r->file || !out) {
+		return (KResult) {K_ERR_INVALID_ARG, 0};
 	}
 
-	if (fgets(out, size, r->file) == NULL) {
-		if (feof(r->file)) {
-			return result;
-		} else if (ferror(r->file)){
-			return k_result_from_errno(errno);
-		}
+	if (line >= r->line_count) 
+		return (KResult) {K_ERR_INVALID_ARG, 0};
+
+	if (fsetpos(r->file, &r->positions[line]) != 0) {
+		return k_result_from_errno(errno);
 	}
 
+	if (!fgets(out, size, r->file))
+		return k_result_from_errno(errno);
 
-	return result;
+	return (KResult) {K_OK, 0};
 }
 
 
-long unsigned int k_reader_get_total_line(Reader *r) {
-
-	return *r->positions;
+long unsigned int k_reader_get_total_line(Reader r) {
+	return r.line_count;
 }
 
 
