@@ -65,24 +65,55 @@ KResult k_reader_read_all(Reader *r, char **out) {
   return (KResult){K_OK, 0};
 }
 
-KResult k_reader_getline(Reader *r, unsigned long line, char *out,
-                         size_t size) {
-  if (!r || !r->file || !out) {
-    return (KResult){K_ERR_INVALID_ARG, 0};
-  }
+KResult k_reader_getline(Reader *r, size_t index, char **out) {
+    if (!r || !r->file || !out)
+        return (KResult){K_ERR_INVALID_ARG, 0};
 
-  if (line >= r->line_count) return (KResult){K_ERR_INVALID_ARG, 0};
+    if (index >= r->line_count)
+        return (KResult){K_ERR_INVALID_ARG, 0};
 
-  if (fsetpos(r->file, &r->positions[line]) != 0) {
-    return k_result_from_errno(errno);
-  }
+    if (!r->positions)
+        return (KResult){K_ERR_INVALID_ARG, 0};
 
-  if (!fgets(out, size, r->file)) return k_result_from_errno(errno);
+    if (fsetpos(r->file, &r->positions[index]) != 0)
+        return k_result_from_errno(errno);
 
-  return (KResult){K_OK, 0};
+    size_t cap = 128;
+    size_t len = 0;
+    char* buf = malloc(cap);
+    if (!buf)
+        return (KResult){K_ERR_NO_MEMORY, errno};
+
+    int c;
+    while ((c = fgetc(r->file)) != EOF) {
+        if (len + 1 >= cap) {
+            cap *= 2;
+            char* tmp = realloc(buf, cap);
+            if (!tmp) {
+                free(buf);
+                return (KResult){K_ERR_NO_MEMORY, errno};
+            }
+            buf = tmp;
+        }
+
+        buf[len++] = (char)c;
+
+        if (c == '\n')
+            break;
+    }
+
+    if (len == 0 && c == EOF) {
+        free(buf);
+        return (KResult){K_ERR_IO, 0};
+    }
+
+    buf[len] = '\0';
+    *out = buf;
+
+    return (KResult){K_OK, 0};
 }
 
-long unsigned int k_reader_get_total_line(Reader r) { return r.line_count; }
+void k_reader_get_total_line(Reader r, unsigned long* len) { *len = r.line_count; }
 
 void k_reader_free(Reader *r) {
   fclose(r->file);

@@ -19,18 +19,13 @@ int main() {
   printf("Makefile.am content: \n%s\n", content);
 	free(content);
 
-  unsigned long total_len = k_reader_get_total_line(reader);
+  unsigned long total_len;
+	k_reader_get_total_line(reader, &total_len);
   printf("total lines = %lu\n", total_len);
 
-  char* line_1 = malloc(255);
+  char* line_1 = NULL;
 
-  result = k_reader_getline(&reader, total_len - 1, line_1, sizeof(char) * 255);
-  if (K_FAILED(result)) {
-		free(line_1);
-    k_reader_free(&reader);
-    k_result_print(result);
-    return -1;
-  }
+  K_WRAP(k_reader_getline(&reader, total_len - 1, &line_1), cleanup);
 
   printf("Makefile.am:1: %s\n", line_1);
 
