@@ -7,9 +7,9 @@ libkonio_la_SOURCES = \
     reader/reader.c \
 		directory/directory.c
 
+libkonio_la_CPPFLAGS = $(KCORE_CPPFLAGS)
 
-AM_CPPFLAGS = -I$(KCORE_DIR)/src
-LDADD = $(KCORE_DIR)/.libs/libkcore.a
+libkonio_la_LIBADD = $(KCORE_LDADD)
 
 libkonio_la_LDFLAGS = -version-info 0:0:0
 
