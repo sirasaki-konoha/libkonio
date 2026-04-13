@@ -5,8 +5,11 @@ libkonio_la_SOURCES = \
 		kutil.c \
     writer/writer.c \
     reader/reader.c \
-		directory/directory.c \
-		other.c
+		directory/directory.c
+
+
+AM_CPPFLAGS = -I$(KCORE_DIR)/src
+LDADD = $(KCORE_DIR)/.libs/libkcore.a
 
 libkonio_la_LDFLAGS = -version-info 0:0:0
 
